@@ -31,10 +31,5 @@ jobs:
  
         run: |
           pip install schemachange
-          schemachange -f $GITHUB_WORKSPACE/migrations \
-            -a $SF_ACCOUNT \
-            -u $SF_USERNAME \
-            -r $SF_ROLE \
-            -w $SF_WAREHOUSE \
-            -d $SF_DATABASE \
-            -p $SNOWFLAKE_PASSWORD
+          schemachange -f $GITHUB_WORKSPACE/migrations 
+            
