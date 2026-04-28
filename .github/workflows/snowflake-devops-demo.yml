@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - main
-    paths:
-      - 'migrations/**'
- 
   workflow_dispatch:
  
 jobs:
@@ -34,12 +31,14 @@ jobs:
         run: |
           pip install schemachange
  
-          schemachange deploy \
-            --account $SF_ACCOUNT \
-            --user $SF_USERNAME \
-            --password $SF_PASSWORD \
-            --role $SF_ROLE \
-            --warehouse $SF_WAREHOUSE \
-            --database $SF_DATABASE \
-            --change-history-table METADATA.SCHEMACHANGE.CHANGE_HISTORY \
-            --root-folder $GITHUB_WORKSPACE/migrations
+          mkdir -p ~/.snowflake
+ 
+          echo "[default]" > ~/.snowflake/connections.toml
+          echo "account = \"$SF_ACCOUNT\"" >> ~/.snowflake/connections.toml
+          echo "user = \"$SF_USERNAME\"" >> ~/.snowflake/connections.toml
+          echo "password = \"$SF_PASSWORD\"" >> ~/.snowflake/connections.toml
+          echo "role = \"$SF_ROLE\"" >> ~/.snowflake/connections.toml
+          echo "warehouse = \"$SF_WAREHOUSE\"" >> ~/.snowflake/connections.toml
+          echo "database = \"$SF_DATABASE\"" >> ~/.snowflake/connections.toml
+ 
+          schemachange deploy --root-folder $GITHUB_WORKSPACE/migrations --connections-file-path ~/.snowflake/connections.toml --connection-name default
